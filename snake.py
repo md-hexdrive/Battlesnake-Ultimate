@@ -1,7 +1,50 @@
 import moves
 from util import get_pos
 
+# TODO: Track all the snakes on the board from here rather than directly in Board.py
+class SnakeTracker:
+    def __init__(self, data):
+        self.me = Snake(data['you'], is_you=True)
+        self.snakes = []
+        self.snakes.append(self.me)
+        for snk in data['board']['snakes']:
+            snake = Snake(snk)
+            if snake != self.me:
+                self.snakes.append(snake)
+        
+        self.teams = dict()
+        for snake in self.snakes:
+            squad = snake.squad
+            if squad != "":
+                if squad not in self.teams:
+                    self.teams[squad] = []
+                self.teams[squad].append(snake)
+    
+    # Is this snake my teammate?
+    def are_teammates(self, snake1, snake2):
+        if snake1.squad != "":
+            return snake1.squad == snake2.squad
+        else:
+            return False
+    
+    def get_teammates(self, snake1):
+        team = self.get_team(snake.squad)
+        returned_snakes = []
+        for snake2 in team:
+            if snake1 != snake2:
+                returned_snakes.append(snake2)
+        return returned_snakes
+    # return the snakes that are members of team: team_id
+    def get_team(self, team_id):
+        return list(self.teams[team_id])
+    
+    # get the snake with id: snake_id
+    def get_snake(self, snake_id):
+        for snake in snakes:
+            if snake.snake_id == snake_id:
+                return snake
 
+# Snake: a class that represents a snake on the board
 class Snake:
     def __init__(self, data, is_you=False, is_alive=True):
         self.snake_id = data['id']

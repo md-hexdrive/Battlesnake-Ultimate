@@ -17,7 +17,7 @@ class Board:
 
         self.food = []
 
-        self.board = np.zeros((self.width, self.height), dtype=np.int16)
+        self.board = np.zeros((self.width, self.height), dtype=list)
         self.hazards = np.zeros((self.width, self.height), dtype=np.int16)
         self.healthmatrix = np.zeros((self.width, self.height), dtype=np.int16)
         self.lengthmatrix = np.zeros((self.width, self.height), dtype=np.int16)
@@ -37,15 +37,23 @@ class Board:
 
     def __getitem__(self, index):
         return self.board[index]
+    def __setitem__(self, index, data):
+        if type(self.board[index]) != type(list):
+            self.board[index] = list()
+        self.board[index].append(data)
 
     def process_board(self, data):
+        
+        for x in range(self.width):
+            for y in range(self.height):
+                self.board[x,y] = [0]
         # load hazards
         self.load_hazards(data)
 
         # load food data
         for food in data['board']['food']:
             food_pos = get_pos(food)
-            self.board[food_pos] = FOOD
+            self[food_pos] = FOOD
             self.food.append(food_pos)
 
         # load enemy snakes
@@ -65,37 +73,43 @@ class Board:
                 self.board[tail] = ENEMY_TAIL
 
             head = get_pos(snake.head)
-            self.board[head] = ENEMY_HEAD
+            self[head] = ENEMY_HEAD
             if snake.length >= self.me.length or on_same_team:
                 other_snake_moves = self.safe_moves(head)
                 for move in other_snake_moves.values():
-                    self.board[move] = ENEMY_NEXT_MOVE
-
+                    self[move] = ENEMY_NEXT_MOVE
+    
     # load yourself
     def load_me(self, snake):
         for pos in snake.body:
             x, y = get_pos(pos)
-            self.board[x, y] = MY_BODY
+            self[x, y] = MY_BODY
             self.healthmatrix[x, y] = snake.health
             self.lengthmatrix[x, y] = snake.length
             self.snakematrix[x, y] = snake.snake_id
 
         head = get_pos(snake.head)
         tail = get_pos(snake.tail)
-        self.board[head] = MY_HEAD
+        self[head] = MY_HEAD
 
         if len(snake.body
                ) == snake.length and snake.length > 3 and snake.health < 100:
             return
         else:
-            if self.board[tail] == FREE_SPACE:
-                self.board[tail] = MY_TAIL
+            if self[tail] == FREE_SPACE:
+                self[tail] = MY_TAIL
 
     def load_hazards(self, data):
         for hazard in data['board']['hazards']:
             x, y = get_pos(hazard)
-            self.hazards[x, y] = HAZARD
-
+            self[x, y] = HAZARD
+    
+    
+    # add new data to the position pos
+    def add_data(self, data, x, y=None):
+        x, y = get_pos(x, y)
+        self[x,y] = data
+        
     def safe_moves(self, x, y=None, ignored=[]):
         x, y = get_pos(x, y)
         possible_moves = moves.get_moves(x, y)
@@ -114,13 +128,16 @@ class Board:
             return True
         else:
             return False
-
+    
+    # TODO: upgrade this to match new board representation
     def is_safe(self, x, y=None, ignored=[]):
         x, y = get_pos(x, y)
 
         if self.in_bounds(x, y):
             contents = self[x, y]
-            if contents <= SAFE_SPACE or contents in ignored:
+            if type(contents) == type(int(0)) and contents <= SAFE_SPACE:
+                return True
+            elif type(contents) == type(list()) and (SAFE_SPACE in contents or contents in ignored):
                 return True
             else:
                 return False
@@ -129,14 +146,14 @@ class Board:
 
     def is_food(self, x, y=None):
         x, y = get_pos(x, y)
-        if self[x, y] == FOOD:
+        if FOOD in self[x, y]:
             return True
         else:
             return False
 
     def is_hazard(self, x, y=None):
         x, y = get_pos(x, y)
-        if self[x, y] == HAZARD:
+        if HAZARD in self[x, y]:
             return True
         else:
             return False
@@ -199,7 +216,7 @@ if __name__ == "__main__":
         board = Board(data)
         print(board.board)
         print(board.hazards)
-        print(board.snakes)
+        #print(board.snakes)
         print(board.is_safe(0, 0))
         print(board.snakematrix)
         print(board.is_snake_at(0, 0))

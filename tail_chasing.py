@@ -14,7 +14,7 @@ def tail_chase(board, curr_pos, possible_moves,
     curr_pos = me.head
     returned_moves = dict()
     
-    possible_moves = behaviour.search_for_moves(board, curr_pos, ignored)
+    
 
     if should_follow_tail(board, curr_pos, space_per_direction, surroundings_per_direction, available_spaces_per_direction, possible_moves, ignored):
         for name, space in space_per_direction.items():

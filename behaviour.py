@@ -60,7 +60,7 @@ def snake_behaviour(data):
 # find possible moves to make from your current position
 def search_for_moves(board, curr_pos, ignored=[]):
     possible_moves = board.safe_moves(curr_pos, ignored=ignored)
-
+    print(possible_moves)
     space_per_direction, surroundings_per_direction, available_spaces_per_direction = flood_fill.compare_moves(board, curr_pos, possible_moves, ignored)
     
     returned_moves = tail_chasing.tail_chase(board, curr_pos, possible_moves, 

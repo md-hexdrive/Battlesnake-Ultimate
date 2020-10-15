@@ -72,7 +72,7 @@ class Board:
                 other_snake_moves = self.safe_moves(head)
                 for move in other_snake_moves.values():
                     self.board[move] = ENEMY_NEXT_MOVE
-                predict.predict_moves(self, snake)
+                predict.predict_moves(self, snake, self.me)
 
     # load yourself
     def load_me(self, snake):

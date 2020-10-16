@@ -70,4 +70,4 @@ def search_for_moves(board, curr_pos, ignored=[]):
 
 # Should I eat Food?
 def eat_food(board, possible_moves):
-    return True
+    return False

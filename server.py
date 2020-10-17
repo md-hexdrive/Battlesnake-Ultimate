@@ -18,13 +18,11 @@ class Battlesnake(object):
         # TIP: If you open your Battlesnake URL in browser you should see this data
         return {
             "apiversion": "1",
-            "author": "",  # TODO: Your Battlesnake Username
-            #"color": "#279ce4",  # TODO: Personalize
-            #"color": "#596b75",  # TODO: Personalize
-            #"color": "#272f33",  # TODO: Personalize
-            "color": "#3a464d",  # TODO: Personalize
-            "head": "shac-tiger-king",  # TODO: Personalize
-            "tail": "bolt",  # TODO: Personalize
+            "author": "Ronan",  # TODO: Your Battlesnake Username
+            #"color": "#ffdf00",  # TODO: Personalize
+            "color": "#A40606",  # TODO: Personalize
+            "head": "bwc-ski",  # TODO: Personalize
+            "tail": "shac-tiger-tail",  # TODO: Personalize
         }
 
     @cherrypy.expose
@@ -61,6 +59,11 @@ class Battlesnake(object):
         # This function is called when a game your snake was in ends.
         # It's purely for informational purposes, you don't have to make any decisions here.
         data = cherrypy.request.json
+        me = data["you"]
+        if me in data["board"]["snakes"]:
+            print("you won!!")
+        else:
+            print("you lost")
 
         print("END")
         return "ok"

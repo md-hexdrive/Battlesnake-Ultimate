@@ -48,6 +48,9 @@ def snake_behaviour(data):
     # look for food, if I should do that now
     if hunt_food and len(possible_moves) > 0 and eat_food(board, possible_moves):
         move = goto.find_food(board, curr_pos, possible_moves)
+    else:
+        possible_moves = avoid_food(board, possible_moves)
+    
     # pick a random safe move
     if len(possible_moves) > 0 and move == None:
         move = moves.pick_move(possible_moves)
@@ -60,7 +63,7 @@ def snake_behaviour(data):
 # find possible moves to make from your current position
 def search_for_moves(board, curr_pos, ignored=[]):
     possible_moves = board.safe_moves(curr_pos, ignored=ignored)
-
+    print(possible_moves)
     space_per_direction, surroundings_per_direction, available_spaces_per_direction = flood_fill.compare_moves(board, curr_pos, possible_moves, ignored)
     
     returned_moves = tail_chasing.tail_chase(board, curr_pos, possible_moves, 
@@ -82,4 +85,18 @@ def search_for_moves(board, curr_pos, ignored=[]):
 
 # Should I eat Food?
 def eat_food(board, possible_moves):
-    return True
+    #snakes =
+    if board.me.health < 99:
+        return True
+    else:
+        return False
+
+def avoid_food(board, possible_moves):
+    returned_moves = dict()
+    if not eat_food(board, possible_moves):
+        for name, move in possible_moves.items():
+            if not board.is_food(move):
+                returned_moves[name] = move
+    if len(returned_moves) > 0:
+        return returned_moves
+    return possible_moves

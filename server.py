@@ -18,6 +18,7 @@ class Battlesnake(object):
         # TIP: If you open your Battlesnake URL in browser you should see this data
         return {
             "apiversion": "1",
+
             "author": "md-hexdrive",  # My Battlesnake Username            
             #"color": "#279ce4",  
             #"color": "#596b75",  
@@ -26,6 +27,7 @@ class Battlesnake(object):
             "color": "#079b31",  # Cool darker green colour
             "head": "shac-tiger-king",  # Tiger head
             "tail": "bolt",  # Lightning Bolt Tail
+
         }
 
     @cherrypy.expose
@@ -62,6 +64,11 @@ class Battlesnake(object):
         # This function is called when a game your snake was in ends.
         # It's purely for informational purposes, you don't have to make any decisions here.
         data = cherrypy.request.json
+        me = data["you"]
+        if me in data["board"]["snakes"]:
+            print("you won!!")
+        else:
+            print("you lost")
 
         print("END")
         return "ok"

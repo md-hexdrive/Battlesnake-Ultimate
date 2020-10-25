@@ -8,10 +8,11 @@ from constants import FREE_SPACE, FOOD, SAFE_SPACE, HAZARD, MY_HEAD, MY_BODY, MY
 
 
 class Board:
-    def __init__(self, data):
+    def __init__(self, data, prediction_depth=2):
 
         self.data = data
-
+        self.prediction_depth = prediction_depth
+        
         self.width = data['board']['width']
         self.height = data['board']['height']
 
@@ -34,6 +35,7 @@ class Board:
                 self.snakes[snake['id']] = snk
 
         self.process_board(data)
+        
 
     def __getitem__(self, index):
         return self.board[index]
@@ -72,7 +74,7 @@ class Board:
                 other_snake_moves = self.safe_moves(head)
                 for move in other_snake_moves.values():
                     self.board[move] = ENEMY_NEXT_MOVE
-                predict.predict_moves(self, snake, self.me)
+                predict.predict_moves(self, snake, self.me, depth=self.prediction_depth)
 
     # load yourself
     def load_me(self, snake):

@@ -1,6 +1,6 @@
 import json
 import numpy as np
-
+import predict
 import moves
 from snake import Snake
 from util import get_pos, distance, directions
@@ -8,10 +8,11 @@ from constants import FREE_SPACE, FOOD, SAFE_SPACE, HAZARD, MY_HEAD, MY_BODY, MY
 
 
 class Board:
-    def __init__(self, data):
+    def __init__(self, data, prediction_depth=2):
 
         self.data = data
-
+        self.prediction_depth = prediction_depth
+        
         self.width = data['board']['width']
         self.height = data['board']['height']
 
@@ -34,6 +35,7 @@ class Board:
                 self.snakes[snake['id']] = snk
 
         self.process_board(data)
+        
 
     def __getitem__(self, index):
         return self.board[index]
@@ -62,14 +64,17 @@ class Board:
                     self.lengthmatrix[x, y] = snake.length
                     self.snakematrix[x, y] = snake
                 tail = get_pos(snake.tail)
-                self.board[tail] = ENEMY_TAIL
+                #todo: double check this
+                if distance(self.me.head, tail) < 2:
+                    self.board[tail] = ENEMY_TAIL
 
             head = get_pos(snake.head)
             self.board[head] = ENEMY_HEAD
-            if snake.length >= self.me.length or on_same_team:
+            if snake.length >= self.me.length or on_same_team or distance(self.me.head, snake.head) > 2: # todo: double check this condition
                 other_snake_moves = self.safe_moves(head)
                 for move in other_snake_moves.values():
                     self.board[move] = ENEMY_NEXT_MOVE
+                predict.predict_moves(self, snake, self.me, depth=self.prediction_depth)
 
     # load yourself
     def load_me(self, snake):
@@ -78,10 +83,13 @@ class Board:
             self.board[x, y] = MY_BODY
             self.healthmatrix[x, y] = snake.health
             self.lengthmatrix[x, y] = snake.length
-            self.snakematrix[x, y] = snake.snake_id
+            self.snakematrix[x, y] = snake
 
         head = get_pos(snake.head)
         tail = get_pos(snake.tail)
+
+        self.snakematrix[head] = snake
+        self.snakematrix[tail] = snake
         self.board[head] = MY_HEAD
 
         if len(snake.body

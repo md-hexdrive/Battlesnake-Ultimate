@@ -1,6 +1,11 @@
 import util
 
 """
+Path to file containing this snakes appearance configuration
+"""
+appearance_file = "appearance_config.json"
+
+"""
 Constants used to define what is located at a particular
 position on the board
 """

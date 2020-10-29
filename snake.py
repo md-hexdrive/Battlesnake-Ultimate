@@ -35,6 +35,13 @@ class Snake:
         for name, move in moves.get_moves(self.last_pos).items():
             if move == self.head:
                 self.last_move = name
+        
+        self.is_full_length = True
+        self.bodySet = set(self.body)
+        if len(self.bodySet) != len(self.body):
+            self.is_full_length = False
+        # TODO: double check later
+        self.prediction_board = None
 
     def __str__(self):
         return self.name

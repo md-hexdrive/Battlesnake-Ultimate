@@ -37,6 +37,7 @@ class Battlesnake(object):
         # It controls your Battlesnake appearance and author permissions.
         # TIP: If you open your Battlesnake URL in browser you should see this data
 
+
         if self.custom_config != None:
             return self.custom_config
         return self.default_config
@@ -75,6 +76,11 @@ class Battlesnake(object):
         # This function is called when a game your snake was in ends.
         # It's purely for informational purposes, you don't have to make any decisions here.
         data = cherrypy.request.json
+        me = data["you"]
+        if me in data["board"]["snakes"]:
+            print("you won!!")
+        else:
+            print("you lost")
 
         print("END")
         return "ok"

@@ -1,8 +1,11 @@
 import os
 import random
+import json
 
 import cherrypy
 import behaviour
+import constants
+
 """
 This is a simple Battlesnake server written in Python.
 For instructions see https://github.com/BattlesnakeOfficial/starter-snake-python/README.md
@@ -10,25 +13,34 @@ For instructions see https://github.com/BattlesnakeOfficial/starter-snake-python
 
 
 class Battlesnake(object):
+    
+
+    default_config = {
+        "apiversion": "1",
+        "author": "",  # TODO: Your Battlesnake Username
+        #"color": "#279ce4",  # TODO: Personalize
+        #"color": "#596b75",  # TODO: Personalize
+        #"color": "#272f33",  # TODO: Personalize
+        "color": "#3a464d",  # TODO: Personalize
+        "head": "shac-tiger-king",  # TODO: Personalize
+        "tail": "bolt",  # TODO: Personalize
+    }
+    custom_config=None
+
+    def __init__(self, custom_config=None):
+        self.custom_config = custom_config
+
     @cherrypy.expose
     @cherrypy.tools.json_out()
     def index(self):
         # This function is called when you register your Battlesnake on play.battlesnake.com
         # It controls your Battlesnake appearance and author permissions.
         # TIP: If you open your Battlesnake URL in browser you should see this data
-        return {
-            "apiversion": "1",
 
-            "author": "md-hexdrive",  # My Battlesnake Username            
-            #"color": "#279ce4",  
-            #"color": "#596b75",  
-            #"color": "#272f33",  
-            #"color": "#3a464d",  # Black ninja colour
-            "color": "#079b31",  # Cool darker green colour
-            "head": "shac-tiger-king",  # Tiger head
-            "tail": "bolt",  # Lightning Bolt Tail
 
-        }
+        if self.custom_config != None:
+            return self.custom_config
+        return self.default_config
 
     @cherrypy.expose
     @cherrypy.tools.json_in()
@@ -75,7 +87,12 @@ class Battlesnake(object):
 
 
 if __name__ == "__main__":
-    server = Battlesnake()
+    custom_config = None
+    with open(constants.appearance_file, "r") as appearance:
+        print("Loading snake appearance configuration")
+        custom_config = json.load(appearance)
+        print("Appearance", custom_config)
+    server = Battlesnake(custom_config)
     cherrypy.config.update({"server.socket_host": "0.0.0.0"})
     cherrypy.config.update({
         "server.socket_port":

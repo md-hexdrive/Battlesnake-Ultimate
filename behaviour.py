@@ -101,6 +101,9 @@ def search_for_moves(board, curr_pos, ignored=[]):
 # Should I eat Food?
 def eat_food(board, possible_moves):
     #snakes =
+#    for snake in board.get_enemy_snakes():
+#        if len(snake) > len(board.me) /2:
+
     if board.me.health < 99:
         return True
     else:

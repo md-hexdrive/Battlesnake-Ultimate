@@ -88,10 +88,12 @@ class Battlesnake(object):
 
 if __name__ == "__main__":
     custom_config = None
-    with open(constants.appearance_file, "r") as appearance:
-        print("Loading snake appearance configuration")
-        custom_config = json.load(appearance)
-        print("Appearance", custom_config)
+
+    if os.path.exists(constants.appearance_file):
+        with open(constants.appearance_file, "r") as appearance:
+            print("Loading snake appearance configuration")
+            custom_config = json.load(appearance)
+            print("Appearance", custom_config)
     server = Battlesnake(custom_config)
     cherrypy.config.update({"server.socket_host": "0.0.0.0"})
     cherrypy.config.update({

@@ -22,10 +22,12 @@ def snake_behaviour(data):
 
     possible_moves = search_for_moves(board, curr_pos)
 
+    ignored = []
     # follow enemy tail if no other options exist
     if len(possible_moves) == 0:
+        ignored.extend([constants.MY_TAIL, constants.ENEMY_TAIL])
         returned_moves = search_for_moves(
-            board, curr_pos, ignored=[constants.MY_TAIL, constants.ENEMY_TAIL])
+            board, curr_pos, ignored=ignored)
         for name, move in returned_moves.values():
             snake = board.get_snake_at(move)
             if snake == None:
@@ -35,15 +37,17 @@ def snake_behaviour(data):
 
     # move into possible enemy next move if necessary
     if len(possible_moves) == 0:
+        ignored.extend([constants.ENEMY_MOVE_2])
         possible_moves = search_for_moves(
-            board, curr_pos, ignored=[constants.ENEMY_MOVE_2])
+            board, curr_pos, ignored=ignored)
         hunt_food = False  # don't hunt for food in this situation
     # move into possible enemy next move if necessary
     if len(possible_moves) == 0:
+        ignored.extend([constants.ENEMY_NEXT_MOVE])
         possible_moves = search_for_moves(
             board,
             curr_pos,
-            ignored=[constants.ENEMY_NEXT_MOVE, constants.ENEMY_MOVE_2])
+            ignored=ignored)
         hunt_food = False  # don't hunt for food in this situation
 
     move = None

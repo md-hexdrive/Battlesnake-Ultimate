@@ -5,6 +5,7 @@ Code for implementing tail chasing
 import flood_fill
 import behaviour
 import moves
+import constants
 
 def tail_chase(board, curr_pos, possible_moves, 
             space_per_direction, 
@@ -24,7 +25,8 @@ def tail_chase(board, curr_pos, possible_moves,
                 continue
     if me.is_full_length: 
         for name, move in moves.get_moves(curr_pos).items():
-            if move == me.tail:
+
+            if move == me.tail:# and board[move] != constants.ENEMY_NEXT_MOVE:
                 returned_moves[name] = move
     return returned_moves
 

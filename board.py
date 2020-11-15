@@ -110,11 +110,17 @@ class Board:
         for name, move in possible_moves.items():
             if self.is_safe(move, ignored=ignored):
                 returned_moves[name] = move
-            if self.is_snake_at(x,y) and (self[x, y] == ENEMY_TAIL or self[x,y] == MY_TAIL) and self.get_snake_at(x,y).is_full_length:
-                return True 
             else:
                 continue
         return returned_moves
+
+    # is this move guaranteed to be deadly?
+    def is_deadly_move(self, x, y=None):
+        if self.is_safe(x, y, ingored=[range(ENEMY_NEXT_MOVE, ENEMY_NEXT_MOVE + self.prediction_depth)]):
+            return True
+        else:
+            return False
+
 
     def in_bounds(self, x, y=None):
         x, y = get_pos(x, y)
@@ -130,6 +136,8 @@ class Board:
             contents = self[x, y]
             if contents <= SAFE_SPACE or contents in ignored:
                 return True
+            if self.is_snake_at(x,y) and (self[x, y] == ENEMY_TAIL or self[x,y] == MY_TAIL) and self.get_snake_at(x,y).is_full_length:
+                return True 
             else:
                 return False
         else:

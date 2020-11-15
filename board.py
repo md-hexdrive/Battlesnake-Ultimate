@@ -65,8 +65,7 @@ class Board:
                     self.snakematrix[x, y] = snake
                 tail = get_pos(snake.tail)
                 #todo: double check this
-                if distance(self.me.head, tail) < 2:
-                    self.board[tail] = ENEMY_TAIL
+                self.board[tail] = ENEMY_TAIL
 
             head = get_pos(snake.head)
             self.board[head] = ENEMY_HEAD
@@ -92,8 +91,7 @@ class Board:
         self.snakematrix[tail] = snake
         self.board[head] = MY_HEAD
 
-        if len(snake.body
-               ) == snake.length and snake.length > 3 and snake.health < 100:
+        if snake.is_full_length:
             return
         else:
             if self.board[tail] == FREE_SPACE:
@@ -112,6 +110,8 @@ class Board:
         for name, move in possible_moves.items():
             if self.is_safe(move, ignored=ignored):
                 returned_moves[name] = move
+            if self.is_snake_at(x,y) and (self[x, y] == ENEMY_TAIL or self[x,y] == MY_TAIL) and self.get_snake_at(x,y).is_full_length:
+                return True 
             else:
                 continue
         return returned_moves

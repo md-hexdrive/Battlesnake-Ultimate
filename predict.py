@@ -1,4 +1,5 @@
 import constants
+from constants import ENEMY_NEXT_MOVE as move_1
 import util
 
 def predict_snakes(board, enemy_snakes):
@@ -55,10 +56,13 @@ def predict_snake(board, snake, depth=2):
         curr_level = next_level
         next_level = dict()
 
+        snake.prediction_board
 
-def availible_moves(board, pos, snake, ignore_depth, ignored=[]):
+# find the available moves that there is no way yourself or 
+# anyone else can get to first
+def availible_moves(board, pos, snake, curr_depth, ignored=[]):
     """
     Get the possible moves that are available to a particular snake from a position, ignoring the moves available to everyone else
     """
-    #moves = 
+    return board.safe_moves(pos, ingored=ignored.extend(range(curr_depth, move_1 + board.prediction_depth)))
 

@@ -24,6 +24,7 @@ def snake_behaviour(data):
 
     ignored = []
     # follow enemy tail if no other options exist
+    """
     if len(possible_moves) == 0:
         ignored.extend([constants.MY_TAIL, constants.ENEMY_TAIL])
         returned_moves = search_for_moves(
@@ -34,6 +35,7 @@ def snake_behaviour(data):
                 continue
             if snake.is_full_length:  #len(snake.body) == snake.length and
                 possible_moves[name] = move
+    """
 
     # move into possible enemy next move if necessary
     if len(possible_moves) == 0:
@@ -67,6 +69,7 @@ def snake_behaviour(data):
         move = moves.pick_move(possible_moves)
     # if no safe moves are possible, pick a random move to avoid errors
     if move == None:
+        print("No safe move possible, picking random move", move)
         move = random.choice(moves.all_moves())
     return move
 

@@ -50,17 +50,21 @@ def predict_snake(board, snake, depth=2):
     start = snake.head
     next_move_id = constants.ENEMY_NEXT_MOVE
     
-    next_level = board.safe_moves(start, ignored=list(range(next_move_id, next_move_id+depth))) # store the the next
+    next_level = availible_moves(board, start, ignored=list(range(next_move_id, next_move_id+depth))) # store the the next
 
     for level in range(depth):
         curr_level = next_level
         next_level = dict()
 
-        snake.prediction_board
+        move_id = move_1 + level
+        for pos in curr_level:
+
+            snake.prediction_board[pos] = move_id
+
 
 # find the available moves that there is no way yourself or 
 # anyone else can get to first
-def availible_moves(board, pos, snake, curr_depth, ignored=[]):
+def availible_moves(board, pos, curr_depth, ignored=[]):
     """
     Get the possible moves that are available to a particular snake from a position, ignoring the moves available to everyone else
     """

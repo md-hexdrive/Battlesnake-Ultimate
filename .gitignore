@@ -4,3 +4,5 @@
 .idea
 .vscode
 appearance_config.json
+.project
+.pydevproject

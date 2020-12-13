@@ -5,7 +5,7 @@ import moves
 from snake import Snake
 from util import get_pos, distance, directions
 from constants import FREE_SPACE, FOOD, SAFE_SPACE, HAZARD, MY_HEAD, MY_BODY, MY_TAIL, ENEMY_HEAD, ENEMY_TAIL, ENEMY_BODY, ENEMY_NEXT_MOVE
-
+import goto
 
 class Board:
     def __init__(self, data, prediction_depth=2):
@@ -136,7 +136,7 @@ class Board:
             contents = self[x, y]
             if contents <= SAFE_SPACE or contents in ignored:
                 return True
-            if self.is_snake_at(x,y) and (self[x, y] == ENEMY_TAIL or self[x,y] == MY_TAIL) and self.get_snake_at(x,y).is_full_length:
+            if self.is_snake_at(x,y) and (self[x, y] == ENEMY_TAIL or self[x,y] == MY_TAIL) and self.get_snake_at(x,y).is_full_length and not goto.is_closer_snake(self, distance(self.me, (x,y)), (x,y)):
                 return True 
             else:
                 return False
